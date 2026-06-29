@@ -1,4 +1,4 @@
-## Will start catching up on code after 7pm est 6/29/2026
+## Will start catching up on code after 7pm est 6/29/2026 after my exam
 
 
 # IDX Exchange Internship
