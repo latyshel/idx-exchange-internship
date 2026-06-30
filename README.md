@@ -1,8 +1,5 @@
-## Will start catching up on code after 7pm est 6/29/2026 after my exam
 
-
-# IDX Exchange Internship
-
+# IDX Exchange
 ## Objective
 Analyze MLS housing market data using Python and Tableau.
 
