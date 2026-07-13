@@ -1,6 +1,8 @@
 import pandas as pd
 from pathlib import Path
 
+import matplotlib.pyplot as plt
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 INPUT_DIR = BASE_DIR / "data_cleaned"
@@ -157,6 +159,128 @@ print("--------------------------------------------------")
 print(numeric_summary)
 
 
+# Numeric fields required by the assignment
+numeric_fields = [
+    "ClosePrice",
+    "ListPrice",
+    "OriginalListPrice",
+    "LivingArea",
+    "LotSizeAcres",
+    "BedroomsTotal",
+    "BathroomsTotalInteger",
+    "DaysOnMarket",
+    "YearBuilt"
+]
+
+# Create a folder for graph image files
+GRAPH_DIR = OUTPUT_DIR / "distribution_graphs"
+GRAPH_DIR.mkdir(exist_ok=True)
+
+# Keep only fields that actually exist in the sold dataset
+available_numeric_fields = [
+    field for field in numeric_fields
+    if field in sold.columns
+]
+
+# Convert each field to numeric
+for field in available_numeric_fields:
+    sold[field] = pd.to_numeric(
+        sold[field],
+        errors="coerce"
+    )
+
+# Loop through each numeric field
+for field in available_numeric_fields:
+
+    # Remove missing values for this field
+    field_data = sold[field].dropna()
+
+    if field_data.empty:
+        print(f"No valid data available for {field}.")
+        continue
+
+    plt.figure(figsize=(8, 5))
+
+    plt.hist(
+        field_data,
+        bins=30,
+        edgecolor="black"
+    )
+
+    plt.title(f"Distribution of {field}")
+    plt.xlabel(field)
+    plt.ylabel("Number of Records")
+    plt.tight_layout()
+
+    plt.savefig(
+        GRAPH_DIR / f"{field}_histogram.png"
+    )
+
+    plt.close()
+
+
+    plt.figure(figsize=(8, 3))
+
+    plt.boxplot(
+        field_data,
+        vert=False
+    )
+
+    plt.title(f"Boxplot of {field}")
+    plt.xlabel(field)
+    plt.tight_layout()
+
+    plt.savefig(
+        GRAPH_DIR / f"{field}_boxplot.png"
+    )
+
+    plt.close()
+
+    percentile_summary = field_data.describe(
+        percentiles=[
+            0.01,
+            0.05,
+            0.10,
+            0.25,
+            0.50,
+            0.75,
+            0.90,
+            0.95,
+            0.99
+        ]
+    )
+
+    percentile_summary.to_csv(
+        OUTPUT_DIR / f"{field}_percentile_summary.csv"
+    )
+
+
+    q1 = field_data.quantile(0.25)
+    q3 = field_data.quantile(0.75)
+    iqr = q3 - q1
+
+    lower_bound = q1 - (1.5 * iqr)
+    upper_bound = q3 + (1.5 * iqr)
+
+    outlier_count = (
+        (field_data < lower_bound)
+        | (field_data > upper_bound)
+    ).sum()
+
+    print(f"\n{field}")
+    print("-" * 40)
+    print(f"Minimum: {field_data.min()}")
+    print(f"Maximum: {field_data.max()}")
+    print(f"Mean: {field_data.mean()}")
+    print(f"Median: {field_data.median()}")
+    print(f"Q1: {q1}")
+    print(f"Q3: {q3}")
+    print(f"IQR: {iqr}")
+    print(f"Lower outlier boundary: {lower_bound}")
+    print(f"Upper outlier boundary: {upper_bound}")
+    print(f"Number of possible outliers: {outlier_count}")
+
+print("\nDistribution graphs have been saved.")
 
 fred_url = (
     "https://fred.stlouisfed.org/graph/"
