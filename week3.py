@@ -2,14 +2,10 @@ import pandas as pd
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-INPUT_DIR = BASE_DIR / "data_cleaned"
-
-OUTPUT_DIR = BASE_DIR / "week2_3_outputs"
-
-OUTPUT_DIR.mkdir(exist_ok=True)
+#step 1
+url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=MORTGAGE30US"
+mortgage = pd.read_csv(url, parse_dates=['observation_date'])
+mortgage.columns = ['date', 'rate_30yr_fixed']
 
 sold_file = INPUT_DIR / "sold.csv"
 listings_file = INPUT_DIR / "listings.csv"
