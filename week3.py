@@ -159,7 +159,6 @@ print("--------------------------------------------------")
 print(numeric_summary)
 
 
-# Numeric fields required by the assignment
 numeric_fields = [
     "ClosePrice",
     "ListPrice",
@@ -172,27 +171,24 @@ numeric_fields = [
     "YearBuilt"
 ]
 
-# Create a folder for graph image files
 GRAPH_DIR = OUTPUT_DIR / "distribution_graphs"
 GRAPH_DIR.mkdir(exist_ok=True)
 
-# Keep only fields that actually exist in the sold dataset
+
 available_numeric_fields = [
     field for field in numeric_fields
     if field in sold.columns
 ]
 
-# Convert each field to numeric
 for field in available_numeric_fields:
     sold[field] = pd.to_numeric(
         sold[field],
         errors="coerce"
     )
 
-# Loop through each numeric field
 for field in available_numeric_fields:
 
-    # Remove missing values for this field
+   
     field_data = sold[field].dropna()
 
     if field_data.empty:
@@ -333,7 +329,6 @@ print("--------------------------------------------------")
 print(mortgage_monthly.tail())
 
 
-# Sold data uses CloseDate
 sold["CloseDate"] = pd.to_datetime(
     sold["CloseDate"],
     errors="coerce"
