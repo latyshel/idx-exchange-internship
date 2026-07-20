@@ -538,6 +538,10 @@ listings_with_rates.to_csv(
     index=False
 )
 
+sold.to_csv(
+    OUTPUT_DIR / "sold_cleaned_with_date_flags.csv",
+    index=False
+    
 print("\nWEEKS 2–3 WORK COMPLETE")
 print("--------------------------------------------------")
 print("Saved locally:")
