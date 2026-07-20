@@ -514,7 +514,6 @@ sold.to_csv(
     OUTPUT_DIR / "sold_cleaned_with_date_flags.csv",
     index=False
     
-print("\nWEEKS 2–3 WORK COMPLETE")
 print("--------------------------------------------------")
 print("Saved locally:")
 print("1. sold_residential_with_rates.csv")
