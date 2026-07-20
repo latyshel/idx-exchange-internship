@@ -441,8 +441,6 @@ date_columns = [
     "ContractStatusChangeDate"
 ]
 
-# Convert date columns from text into real datetime values.
-# Invalid or unreadable dates become missing values (NaT).
 for column in date_columns:
     if column in sold.columns:
         sold[column] = pd.to_datetime(
@@ -457,19 +455,14 @@ for column in date_columns:
     if column in sold.columns:
         print(f"{column}: {sold[column].dtype}")
 
-
-# True when the listing date occurs after the close date.
 sold["listing_after_close_flag"] = (
     sold["ListingContractDate"] > sold["CloseDate"]
 )
 
-# True when the purchase contract date occurs after the close date.
 sold["purchase_after_close_flag"] = (
     sold["PurchaseContractDate"] > sold["CloseDate"]
 )
 
-# True when the dates are not in the expected order:
-# ListingContractDate <= PurchaseContractDate <= CloseDate
 sold["negative_timeline_flag"] = (
     (sold["PurchaseContractDate"] < sold["ListingContractDate"])
     |
