@@ -500,27 +500,6 @@ print(
 )
 
 
-sold["listing_to_contract_days"] = (
-    sold["PurchaseContractDate"]
-    - sold["ListingContractDate"]
-).dt.days
-
-sold["contract_to_close_days"] = (
-    sold["CloseDate"]
-    - sold["PurchaseContractDate"]
-).dt.days
-
-print("\nTIMELINE SUMMARY")
-print("--------------------------------------------------")
-print(
-    sold[
-        [
-            "listing_to_contract_days",
-            "contract_to_close_days"
-        ]
-    ].describe()
-)
-
 sold_with_rates.to_csv(
     OUTPUT_DIR / "sold_residential_with_rates.csv",
     index=False
