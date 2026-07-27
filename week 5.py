@@ -432,6 +432,57 @@ print(
     ].head()
 )
 
+date_columns = [
+    "CloseDate",
+    "PurchaseContractDate",
+    "ListingContractDate",
+    "ContractStatusChangeDate"
+]
+
+for column in date_columns:
+    if column in sold.columns:
+        sold[column] = pd.to_datetime(
+            sold[column],
+            errors="coerce"
+        )
+
+print("\nDATE DATA TYPES")
+print("--------------------------------------------------")
+
+for column in date_columns:
+    if column in sold.columns:
+        print(f"{column}: {sold[column].dtype}")
+
+sold["listing_after_close_flag"] = (
+    sold["ListingContractDate"] > sold["CloseDate"]
+)
+
+sold["purchase_after_close_flag"] = (
+    sold["PurchaseContractDate"] > sold["CloseDate"]
+)
+
+sold["negative_timeline_flag"] = (
+    (sold["PurchaseContractDate"] < sold["ListingContractDate"])
+    |
+    (sold["CloseDate"] < sold["PurchaseContractDate"])
+    |
+    (sold["CloseDate"] < sold["ListingContractDate"])
+)
+
+
+listing_after_close_count = sold[
+    "listing_after_close_flag"
+].sum()
+
+purchase_after_close_count = sold[
+    "purchase_after_close_flag"
+].sum()
+
+negative_timeline_count = sold[
+    "negative_timeline_flag"
+].sum()
+
+
 # week 5
 
 sold["missing_coordinates_flag"] = (
